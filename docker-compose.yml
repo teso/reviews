@@ -6,45 +6,43 @@ services:
         build:
             context: ./
         depends_on:
-            -   reviews_mysql
+            - reviews_mysql
         volumes:
-            -   ./:/var/www/reviews/
-            -   ./docker/php-fpm/php.ini:/usr/local/etc/php/php.ini
+            - ./:/var/www/Reviews/
+            - ./docker/php-fpm/php.ini:/usr/local/etc/php/php.ini
         environment:
-            XDEBUG_CONFIG:  "idekey=PHPSTORM mode=debug client_host=192.168.48.1 client_port=9003"
-            PHP_IDE_CONFIG: "serverName=reviews"
+            XDEBUG_CONFIG: "idekey=PHPSTORM mode=debug client_host=192.168.48.1 client_port=9003"
+            PHP_IDE_CONFIG: "serverName=Reviews"
         networks:
-            -   reviews
+            - reviews
         restart: always
     reviews_mysql:
         image: mysql:5.7.38
         container_name: reviews_mysql
         user: mysql
         environment:
-            -   MYSQL_ROOT_PASSWORD=root_secret
-            -   MYSQL_USER=reviews_user
-            -   MYSQL_PASSWORD=reviews_secret
-            -   MYSQL_DATABASE=reviews
-        ports:
-            -   3333:3306
+            - MYSQL_ROOT_PASSWORD=root_secret
+            - MYSQL_DATABASE=Reviews
+            - MYSQL_USER=reviews_user
+            - MYSQL_PASSWORD=reviews_secret
         volumes:
-            -   ../reviews_database/:/var/lib/mysql/
+            - ../reviews_database/:/var/lib/mysql/
         networks:
-            -   reviews
+            - reviews
         restart: always
     reviews_nginx:
         image: nginx:latest
         container_name: reviews_nginx
         depends_on:
-            -   reviews_php
+            - reviews_php
         volumes_from:
-            -   reviews_php
+            - reviews_php
         ports:
-            -   8000:80
+            - 8000:80
         volumes:
-            -   ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+            - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
         networks:
-            -   reviews
+            - reviews
         restart: always
 networks:
     reviews:
