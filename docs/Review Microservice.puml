@@ -1,0 +1,25 @@
+@startuml
+hide empty members
+
+class ReviewController
+class ReviewRepository
+class ReviewEventConsumer
+class ReviewDomainEventPublisher
+
+hexagon "Review domain" {
+    interface DomainEventPublisherInterface
+    interface ReviewRepositoryInterface
+    class ReviewService
+    entity Review <<aggregate>>
+}
+
+ReviewController -right-> ReviewService
+ReviewEventConsumer --> ReviewService
+ReviewService --> ReviewRepositoryInterface
+ReviewService -> DomainEventPublisherInterface
+ReviewService --> Review
+ReviewRepository -up-> Review
+ReviewRepository ..|> ReviewRepositoryInterface
+ReviewDomainEventPublisher .|> DomainEventPublisherInterface
+
+@enduml
