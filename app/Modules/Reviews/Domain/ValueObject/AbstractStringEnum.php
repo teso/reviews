@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Reviews\Domain\ValueObject;
 
 use App\Modules\Reviews\Domain\Exception\ObjectValue\StringValueNotFoundInEnumException;
+use \ReflectionClass;
 use function \in_array;
 
 abstract class AbstractStringEnum
@@ -20,12 +21,12 @@ abstract class AbstractStringEnum
         $this->value = $value;
     }
 
-    public function contains(string $value)
+    public function contains(string $value): bool
     {
         return in_array($value, $this->getValues());
     }
 
-    public function notContains(string $value)
+    public function notContains(string $value): bool
     {
         return !$this->contains($value);
     }

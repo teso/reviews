@@ -8,11 +8,11 @@ services:
         depends_on:
             - reviews_mysql
         volumes:
-            - ./:/var/www/Reviews/
+            - ./:/var/www/reviews/
             - ./docker/php-fpm/php.ini:/usr/local/etc/php/php.ini
         environment:
             XDEBUG_CONFIG: "idekey=PHPSTORM mode=debug client_host=192.168.48.1 client_port=9003"
-            PHP_IDE_CONFIG: "serverName=Reviews"
+            PHP_IDE_CONFIG: "serverName=reviews"
         networks:
             - reviews
         restart: always
@@ -22,7 +22,7 @@ services:
         user: mysql
         environment:
             - MYSQL_ROOT_PASSWORD=root_secret
-            - MYSQL_DATABASE=Reviews
+            - MYSQL_DATABASE=reviews
             - MYSQL_USER=reviews_user
             - MYSQL_PASSWORD=reviews_secret
         volumes:

@@ -8,7 +8,7 @@ use App\Modules\Reviews\Domain\Entity\Review;
 use App\Modules\Reviews\Domain\ValueObject\ContentValue;
 use App\Modules\Reviews\Domain\ValueObject\DatetimeValue;
 use App\Modules\Reviews\Domain\ValueObject\IntegerIdValue;
-use App\Modules\Reviews\Domain\ValueObject\ReviewStatusEnum;
+use App\Modules\Reviews\Domain\ValueObject\StatusEnum;
 
 trait ReviewDataCarrierTrait
 {
@@ -32,7 +32,7 @@ trait ReviewDataCarrierTrait
         return $this->content;
     }
 
-    public function getStatus(): ReviewStatusEnum
+    public function getStatus(): StatusEnum
     {
         return $this->status;
     }

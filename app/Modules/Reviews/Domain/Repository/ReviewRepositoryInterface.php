@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace App\Modules\Reviews\Domain\Repository;
 
 use App\Modules\Reviews\Domain\Entity\Review;
-use App\Modules\Reviews\Domain\Exception\Repository\ReviewEntityNotFoundException;
+use App\Modules\Reviews\Domain\Exception\Repository\EntityNotFoundException;
 
-interface RepositoryInterface
+interface ReviewRepositoryInterface
 {
-    public function find($reviewId): Review;
+    public function find(int $reviewId): ?Review;
 
     /**
-     * @throws ReviewEntityNotFoundException
+     * @throws EntityNotFoundException
      */
-    public function findOrFail($reviewId): Review;
+    public function findOrFail(int $reviewId): Review;
 
     public function save(Review $review): void;
 

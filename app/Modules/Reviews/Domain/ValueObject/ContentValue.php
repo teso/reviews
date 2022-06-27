@@ -4,25 +4,26 @@ declare(strict_types=1);
 
 namespace App\Modules\Reviews\Domain\ValueObject;
 
-use App\Modules\Reviews\Domain\Exception\Entity\WrongContentLengthException;
+use App\Modules\Reviews\Domain\DomainConfig;
+use App\Modules\Reviews\Domain\Exception\ObjectValue\WrongContentLengthException;
 
 class ContentValue extends StringValue
 {
-    private const MINIMAL_CONTENT_LENGTH = 10;
-    private const MAXIMAL_CONTENT_LENGTH = 1000;
+    private const MINIMUM_LENGTH = DomainConfig::MINIMUM_CONTENT_LENGTH;
+    private const MAXIMUM_LENGTH = DomainConfig::MAXIMUM_CONTENT_LENGTH;
 
     public function __construct(string $value)
     {
         parent::__construct($value);
 
-        if ($this->isLengthInRange(
-            self::MINIMAL_CONTENT_LENGTH,
-            self::MAXIMAL_CONTENT_LENGTH,
+        if ($this->isLengthOutOfRange(
+            self::MINIMUM_LENGTH,
+            self::MAXIMUM_LENGTH,
         )) {
             throw new WrongContentLengthException(
                 $value,
-                self::MINIMAL_CONTENT_LENGTH,
-                self::MAXIMAL_CONTENT_LENGTH
+                self::MINIMUM_LENGTH,
+                self::MAXIMUM_LENGTH
             );
         }
     }

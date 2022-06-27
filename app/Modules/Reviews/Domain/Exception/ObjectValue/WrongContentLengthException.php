@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Reviews\Domain\Exception\Entity;
+namespace App\Modules\Reviews\Domain\Exception\ObjectValue;
 
-use App\Modules\Reviews\Domain\Exception\AbstractRuntimeException;
+use App\Exceptions\AbstractInvalidArgumentException;
 
-class WrongContentLengthException extends AbstractRuntimeException
+class WrongContentLengthException extends AbstractInvalidArgumentException
 {
     public function __construct(string $value, int $minimalLength, int $maximalLenght)
     {

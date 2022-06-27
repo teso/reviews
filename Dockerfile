@@ -24,6 +24,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 WORKDIR /var/www/reviews
 
 # Copy project to working directory
-COPY ./ /var/www/reviews/
+#COPY ./ /var/www/reviews/
 
 CMD php-fpm

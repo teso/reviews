@@ -6,7 +6,7 @@ namespace App\Modules\Reviews\Domain\Service;
 
 use App\Modules\Reviews\Domain\Entity\Review;
 use App\Modules\Reviews\Domain\Event\DomainEventPublisherInterface;
-use App\Modules\Reviews\Domain\Repository\RepositoryInterface;
+use App\Modules\Reviews\Domain\Repository\ReviewRepositoryInterface;
 
 class ReviewService
 {
@@ -14,7 +14,7 @@ class ReviewService
     private $domainPublisher;
 
     public function __construct(
-        RepositoryInterface $repository,
+        ReviewRepositoryInterface $repository,
         DomainEventPublisherInterface $domainPublisher
     ) {
         $this->repository = $repository;
@@ -34,7 +34,7 @@ class ReviewService
 
         $this->repository->save($review);
 
-        $this->domainPublisher->publish($review, $review->pullDomainEvents());
+        $this->domainPublisher->publishFrom($review);
 
         return $review;
     }
@@ -47,7 +47,7 @@ class ReviewService
 
         $this->repository->update($review);
 
-        $this->domainPublisher->publish($review, $review->pullDomainEvents());
+        $this->domainPublisher->publishFrom($review);
     }
 
     public function rejectReview(int $reviewId): void
@@ -58,7 +58,7 @@ class ReviewService
 
         $this->repository->update($review);
 
-        $this->domainPublisher->publish($review, $review->pullDomainEvents());
+        $this->domainPublisher->publishFrom($review);
     }
 
     public function updateReviewContent(int $reviewId, string $newContent): void
@@ -69,7 +69,7 @@ class ReviewService
 
         $this->repository->update($review);
 
-        $this->domainPublisher->publish($review, $review->pullDomainEvents());
+        $this->domainPublisher->publishFrom($review);
     }
 
     public  function removeReview(int $reviewId): void
@@ -80,6 +80,6 @@ class ReviewService
 
         $this->repository->remove($review);
 
-        $this->domainPublisher->publish($review, $review->pullDomainEvents());
+        $this->domainPublisher->publishFrom($review);
     }
 }

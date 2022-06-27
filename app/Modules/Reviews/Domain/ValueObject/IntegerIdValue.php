@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 namespace App\Modules\Reviews\Domain\ValueObject;
 
-use App\Modules\Reviews\Domain\Exception\ObjectValue\InvalidIngeterIdValueException;
+use function strval;
 
-class IntegerIdValue extends IntValue
+class IntegerIdValue extends NaturalValue
 {
-    public function __construct(int $value)
+    public function __toString(): string
     {
-        parent::__construct($value);
-
-        if ($this->isNotNatural()) {
-            throw new InvalidIngeterIdValueException($value);
-        }
+        return strval($this->getValue());
     }
 }

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Reviews\Domain\Exception\ObjectValue;
 
-use App\Modules\Reviews\Domain\Exception\AbstractRuntimeException;
+use App\Exceptions\AbstractInvalidArgumentException;
 
-class InvalidIngeterIdValueException extends AbstractRuntimeException
+class InvalidNaturalValueException extends AbstractInvalidArgumentException
 {
     public function __construct(int $value)
     {

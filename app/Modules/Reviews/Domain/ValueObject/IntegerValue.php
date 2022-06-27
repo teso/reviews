@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Reviews\Domain\ValueObject;
 
-class IntValue
+class IntegerValue
 {
-    private const ZERO_VALUE = 0;
-
     private $value;
 
     public function __construct(int $value)
@@ -15,27 +13,17 @@ class IntValue
         $this->value = $value;
     }
 
-    public function isNatural()
-    {
-        return $this->getValue() > self::ZERO_VALUE;
-    }
-
-    public function isNotNatural()
-    {
-        return !$this->isNatural();
-    }
-
-    public function isBiggerThan(IntValue $otherValue)
+    public function isBiggerThan(IntegerValue $otherValue): bool
     {
         return $this->getValue() > $otherValue->getValue();
     }
 
-    public function isLowerThen(IntValue $otherValue)
+    public function isLowerThen(IntegerValue $otherValue): bool
     {
         return $this->getValue() < $otherValue->getValue();
     }
 
-    public function isEqualTo(IntValue $otherValue)
+    public function isEqualTo(IntegerValue $otherValue): bool
     {
         return $this->getValue() === $otherValue->getValue();
     }

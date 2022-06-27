@@ -4,33 +4,35 @@ declare(strict_types=1);
 
 namespace App\Modules\Reviews\Domain\ValueObject;
 
-use function \strlen;
+use function \mb_strlen;
 
 class StringValue
 {
     private $value;
+    private $length;
 
     public function __construct(string $value)
     {
         $this->value = $value;
+        $this->length = mb_strlen($value, 'utf-8');
     }
 
-    public function isLengthInRange(int $minimalValue, int $maximalValue)
+    public function isLengthInRange(int $minimalValue, int $maximalValue): bool
     {
-        $length = new IntValue(strlen($this->value));
-        $minimalLength = new IntValue($minimalValue);
-        $maximalLength = new IntValue($maximalValue);
+        $length = new IntegerValue($this->length);
+        $minimalLength = new IntegerValue($minimalValue);
+        $maximalLength = new IntegerValue($maximalValue);
 
         return ($length->isBiggerThan($minimalLength) || $length->isEqualTo($minimalLength))
             && ($length->isLowerThen($maximalLength) || $length->isEqualTo($maximalLength));
     }
 
-    public function isLengthOutOfRange(IntValue $minimalValue, IntValue $maximalValue)
+    public function isLengthOutOfRange(int $minimalValue, int $maximalValue): bool
     {
-        return !$this->isInRange($minimalValue, $maximalValue);
+        return !$this->isLengthInRange($minimalValue, $maximalValue);
     }
 
-    public function isEqualTo(StringValue $otherValue)
+    public function isEqualTo(StringValue $otherValue): bool
     {
         return $this->getValue() === $otherValue->getValue();
     }
@@ -38,5 +40,10 @@ class StringValue
     public function getValue(): string
     {
         return $this->value;
+    }
+
+    public function getLength(): int
+    {
+        return $this->length;
     }
 }
