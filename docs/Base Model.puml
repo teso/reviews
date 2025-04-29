@@ -1,0 +1,81 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+entity User {
+    -id: Integer
+    -name: String
+    -email: String
+    -passwordHash: String
+    -createdAt: Datetime
+}
+
+entity Review {
+    -id: Integer
+    -content: String
+    -status: StatusEnum
+    -userId: Integer
+    -clientApplicationId: Integer
+    -createdAt: Datetime
+    +accept()
+    +reject()
+}
+
+entity ModerationResult {
+    -itemId: Integer
+    -result: ModerationResultEnum
+    -moderatorUserId: Integer
+    -moderatedAt: Datetime
+    +accept()
+    +reject()
+}
+
+entity Client {
+    -id: Integer
+    -name: String
+    -ownerUserId: Integer
+    -createdAt: Datetime
+}
+
+entity ModerationRules {
+    -clientApplicationId: Integer
+    -content: String
+}
+
+entity Employee {
+    -clientApplicationId: Integer
+    -userId: Integer
+    -role: RoleEnum
+}
+
+enum ReviewStatusEnum {
+    PENDING_MODERATION
+    ACCEPTED
+    REJECTED
+}
+
+enum ModerationResultEnum {
+    ACCEPTED
+    REJECTED
+}
+
+enum EmployeeRoleEnum {
+    OWNER
+    MODERATOR
+}
+
+User <.. Review : created by
+User <.. ModerationResult : created by
+User <.. Client : owned by
+User <.. Employee : use
+
+Review <.. ModerationResult : use
+Review "*" *-- "1" ReviewStatusEnum
+
+ModerationResult "*" *-- "1" ModerationResultEnum
+
+Client <.. ModerationRules : part of
+Client <.. Employee : work
+
+Employee "*" *-- "1" EmployeeRoleEnum
+
+@enduml
