@@ -14,4 +14,7 @@ use App\Http\Controllers\ReviewController;
 |
 */
 
-Route::apiResource('reviews', ReviewController::class);
+Route::get('/reviews/{id}', [ReviewController::class, 'get']);
+Route::post('/reviews/', [ReviewController::class, 'create']);
+Route::put('/reviews/{id}', [ReviewController::class, 'update']);
+Route::delete('/reviews/{id}', [ReviewController::class, 'remove']);

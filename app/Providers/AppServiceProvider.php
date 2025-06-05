@@ -2,12 +2,12 @@
 
 namespace App\Providers;
 
-use App\Modules\Reviews\Domain\Entity\Review;
-use App\Modules\Reviews\Domain\Event\DomainEventPublisherInterface;
-use App\Modules\Reviews\Domain\Repository\ReviewRepositoryInterface;
-use App\Modules\Reviews\Domain\Service\ReviewService;
+use App\Modules\Reviews\Domain\Entities\Review;
+use App\Modules\Reviews\Domain\Events\DomainEventPublisherInterface;
+use App\Modules\Reviews\Domain\Repositories\ReviewRepositoryInterface;
+use App\Modules\Reviews\Domain\Services\ReviewService;
 use App\Modules\Reviews\Infrastructure\Kafka\ReviewDomainEventPublisher;
-use App\Modules\Reviews\Infrastructure\Mysql\DoctrineReviewRepository;
+use App\Modules\Reviews\Infrastructure\Doctrine\ReviewRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Support\ServiceProvider;
 
@@ -20,36 +20,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(
+        $this->app->bind(
             ReviewRepositoryInterface::class,
-            function ($application) {
-                $entityManager = $application->make(EntityManagerInterface::class);
-
-                return new DoctrineReviewRepository(
-                    $entityManager,
-                    $entityManager->getRepository(Review::class)
-                );
-            }
+            ReviewRepository::class,
         );
 
-        $this->app->singleton(
+        $this->app->bind(
             DomainEventPublisherInterface::class,
-            function ($application) {
-                return new ReviewDomainEventPublisher(
-
-                );
-            }
+            ReviewDomainEventPublisher::class,
         );
 
-        $this->app->singleton(
-            ReviewService::class,
-            function ($application) {
-                return new ReviewService(
-                    $application->make(ReviewRepositoryInterface::class),
-                    $application->make(DomainEventPublisherInterface::class),
-                );
-            }
-        );
+        $this->app->singleton(ReviewService::class);
     }
 
     /**

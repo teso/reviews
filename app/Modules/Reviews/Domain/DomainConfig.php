@@ -9,6 +9,6 @@ class DomainConfig
     /**
      * Limits on length of review textual content
      */
-    public const MINIMUM_CONTENT_LENGTH = 10;
-    public const MAXIMUM_CONTENT_LENGTH = 1000;
+    public const MIN_CONTENT_LENGTH = 10;
+    public const MAX_CONTENT_LENGTH = 1000;
 }

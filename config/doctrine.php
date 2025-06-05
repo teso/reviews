@@ -12,7 +12,7 @@ return [
     | paths setting to the appropriate path and replace App namespace
     | by your own namespace.
     |
-    | Available meta drivers: fluent|annotations|yaml|simplified_yaml|xml|simplified_xml|config|static_php|php
+    | Available meta drivers: attributes|xml|simplified_xml|static_php|php
     |
     | Available connections: mysql|oracle|pgsql|sqlite|sqlsrv
     | (Connections can be configured in the database config)
@@ -27,18 +27,20 @@ return [
     'managers'                   => [
         'default' => [
             'dev'           => env('APP_DEBUG', false),
-            'meta'          => env('DOCTRINE_METADATA', 'annotations'),
+            'meta'          => env('DOCTRINE_METADATA', 'attributes'),
             'connection'    => env('DB_CONNECTION', 'mysql'),
-            'namespaces'    => [],
             'paths'         => [
-                base_path('app/Modules/Reviews/Domain/Entity')
+                base_path('app/Modules/Reviews/Infrastructure/Doctrine/Entities')
             ],
+
             'repository'    => Doctrine\ORM\EntityRepository::class,
+
             'proxies'       => [
-                'namespace'     => false,
+                'namespace'     => 'DoctrineProxies',
                 'path'          => storage_path('proxies'),
                 'auto_generate' => env('DOCTRINE_PROXY_AUTOGENERATE', false)
             ],
+
             /*
             |--------------------------------------------------------------------------
             | Doctrine events
@@ -52,7 +54,9 @@ return [
                 'listeners'   => [],
                 'subscribers' => []
             ],
+
             'filters'       => [],
+
             /*
             |--------------------------------------------------------------------------
             | Doctrine mapping types
@@ -68,15 +72,23 @@ return [
             | });
             |
             | References:
-            | http://doctrine-orm.readthedocs.org/en/latest/cookbook/custom-mapping-types.html
-            | http://doctrine-dbal.readthedocs.org/en/latest/reference/types.html#custom-mapping-types
-            | http://doctrine-orm.readthedocs.org/en/latest/cookbook/advanced-field-value-conversion-using-custom-mapping-types.html
-            | http://doctrine-orm.readthedocs.org/en/latest/reference/basic-mapping.html#reference-mapping-types
-            | http://symfony.com/doc/current/cookbook/doctrine/dbal.html#registering-custom-mapping-types-in-the-schematool
+            | https://www.doctrine-project.org/projects/doctrine-orm/en/current/cookbook/custom-mapping-types.html
+            | https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/types.html#custom-mapping-types
+            | https://www.doctrine-project.org/projects/doctrine-orm/en/current/cookbook/advanced-field-value-conversion-using-custom-mapping-types.html
+            | https://www.doctrine-project.org/projects/doctrine-orm/en/current/reference/basic-mapping.html
+            | https://symfony.com/doc/current/doctrine/dbal.html#registering-custom-mapping-types-in-the-schematool
             |--------------------------------------------------------------------------
             */
             'mapping_types' => [
                 //'enum' => 'string'
+            ],
+
+            /**
+             * References:
+             * https://www.doctrine-project.org/projects/doctrine-dbal/en/current/reference/architecture.html#middlewares
+             */
+            'middlewares' => [
+                // Doctrine\DBAL\Logging\Middleware::class
             ]
         ]
     ],
@@ -92,7 +104,6 @@ return [
     |
     */
     'extensions'                 => [
-        //LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixExtension::class,
         //LaravelDoctrine\Extensions\Timestamps\TimestampableExtension::class,
         //LaravelDoctrine\Extensions\SoftDeletes\SoftDeleteableExtension::class,
         //LaravelDoctrine\Extensions\Sluggable\SluggableExtension::class,
@@ -112,14 +123,6 @@ return [
     |--------------------------------------------------------------------------
     */
     'custom_types'               => [
-        'datetimeValue' =>
-            \App\Modules\Reviews\Infrastructure\Mysql\ValueObject\DoctrineDatetimeValue::class,
-        'integerIdValue' =>
-            \App\Modules\Reviews\Infrastructure\Mysql\ValueObject\DoctrineIntegerIdValue::class,
-        'reviewContent' =>
-            \App\Modules\Reviews\Infrastructure\Mysql\ValueObject\DoctrineReviewContentValue::class,
-        'reviewStatusEnum' =>
-            \App\Modules\Reviews\Infrastructure\Mysql\ValueObject\DoctrineReviewStatusEnum::class,
     ],
     /*
     |--------------------------------------------------------------------------
@@ -149,26 +152,13 @@ return [
     ],
     /*
     |--------------------------------------------------------------------------
-    | Enable query logging with laravel file logging,
-    | debugbar, clockwork or an own implementation.
-    | Setting it to false, will disable logging
-    |
-    | Available:
-    | - LaravelDoctrine\ORM\Loggers\LaravelDebugbarLogger
-    | - LaravelDoctrine\ORM\Loggers\ClockworkLogger
-    | - LaravelDoctrine\ORM\Loggers\FileLogger
-    |--------------------------------------------------------------------------
-    */
-    'logger'                     => env('DOCTRINE_LOGGER', false),
-    /*
-    |--------------------------------------------------------------------------
     | Cache
     |--------------------------------------------------------------------------
     |
     | Configure meta-data, query and result caching here.
     | Optionally you can enable second level caching.
     |
-    | Available: apc|array|file|illuminate|memcached|php_file|redis|void
+    | Available: apc|array|file|illuminate|memcached|php_file|redis
     |
     */
     'cache' => [
@@ -177,15 +167,15 @@ return [
         'namespace'        => null,
         'metadata'         => [
             'driver'       => env('DOCTRINE_METADATA_CACHE', env('DOCTRINE_CACHE', 'array')),
-            'namespace'    => null,
+            'namespace'    => 'metadata',
         ],
         'query'            => [
             'driver'       => env('DOCTRINE_QUERY_CACHE', env('DOCTRINE_CACHE', 'array')),
-            'namespace'    => null,
+            'namespace'    => 'query',
         ],
         'result'           => [
             'driver'       => env('DOCTRINE_RESULT_CACHE', env('DOCTRINE_CACHE', 'array')),
-            'namespace'    => null,
+            'namespace'    => 'result',
         ],
     ],
     /*

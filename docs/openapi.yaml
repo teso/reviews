@@ -1,0 +1,155 @@
+openapi: 3.0.0
+info:
+  title: 'Reviews API'
+  description: 'This API allows to manage the reviews'
+  version: 1.0.0
+paths:
+  '/api/reviews/{id}':
+    get:
+      description: 'Get a single review by ID'
+      operationId: getReview
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier of review'
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: 'Returns the found review'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewResponse'
+        '404':
+          description: 'The review was not found'
+    put:
+      description: 'Update a single review by ID'
+      operationId: updateReview
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier of review'
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+                - content
+                - version
+              properties:
+                content:
+                  description: 'New textual content of review that should be changed'
+                  type: string
+                  maxLength: 1000
+                  minLength: 10
+                version:
+                  description: 'Version of entity'
+                  type: integer
+                  minimum: 1
+              type: object
+      responses:
+        '204':
+          description: 'The review was updated successfully'
+        '400':
+          description: 'Returns a list of validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items: { type: string }
+        '404':
+          description: 'The review was not found'
+        '409':
+          description: 'The review was updated by someone else'
+    delete:
+      description: 'Remove a single review by ID'
+      operationId: removeReview
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Unique identifier of review'
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '204':
+          description: 'The review was removed successfully'
+        '404':
+          description: 'The review was not found'
+  /api/reviews:
+    post:
+      description: 'Create a new review'
+      operationId: createReview
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+                - content
+                - userId
+                - applicationId
+              properties:
+                content:
+                  description: 'Textual content of review'
+                  type: string
+                  maxLength: 1000
+                  minLength: 10
+                userId:
+                  description: 'Unique identifier of review author'
+                  type: integer
+                  minimum: 1
+                applicationId:
+                  description: 'Unique identifier of application where review was made'
+                  type: integer
+                  minimum: 1
+              type: object
+      responses:
+        '201':
+          description: 'Returns the created review'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewResponse'
+        '400':
+          description: 'Returns a list of validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items: { type: string }
+components:
+  schemas:
+    ReviewResponse:
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+        status:
+          type: string
+        userId:
+          type: integer
+        applicationId:
+          type: integer
+        createdAt:
+          type: string
+        version:
+          type: integer
+      type: object

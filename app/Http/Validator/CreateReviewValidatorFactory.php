@@ -7,7 +7,7 @@ namespace App\Http\Validator;
 use App\Modules\Reviews\Domain\DomainConfig;
 use Illuminate\Support\Facades\Validator;
 
-class UpdateReviewValidatorFactory
+class CreateReviewValidatorFactory
 {
     public static function create(array $data)
     {
@@ -20,7 +20,7 @@ class UpdateReviewValidatorFactory
                     'min:' . DomainConfig::MIN_CONTENT_LENGTH,
                     'max:' . DomainConfig::MAX_CONTENT_LENGTH,
                 ],
-                'version' => [
+                'applicationId' => [
                     'required',
                     'integer',
                     'min:1',
@@ -35,12 +35,12 @@ class UpdateReviewValidatorFactory
                     'The content length must be greater than ' . DomainConfig::MIN_CONTENT_LENGTH . ' symbols',
                 'content.max' =>
                     'The content length must be less than ' . DomainConfig::MAX_CONTENT_LENGTH . ' symbols',
-                'version.required' =>
-                    'The version is required',
-                'version.integer' =>
-                    'The version must be an integer',
-                'version.min' =>
-                    'The version must be greater than 0',
+                'applicationId.required' =>
+                    'The application identifier is required',
+                'applicationId.integer' =>
+                    'The application identifier must be a number',
+                'applicationId.min' =>
+                    'The application identifier must be greate than zero',
             ]
         );
     }
