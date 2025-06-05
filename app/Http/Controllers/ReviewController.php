@@ -54,10 +54,8 @@ class ReviewController extends Controller
             ),
         ],
     )]
-    public function get(int $id): Response
+    public function get(int $id, GetReviewHandler $handler): Response
     {
-        $handler = app(GetReviewHandler::class);
-
         $review = $handler(new GetReview($id));
 
         if (!$review) {
@@ -125,8 +123,10 @@ class ReviewController extends Controller
             ),
         ],
     )]
-    public function create(ServerRequestInterface $request): Response
-    {
+    public function create(
+        ServerRequestInterface $request,
+        CreateReviewHandler $handler
+    ): Response {
         $data = $request->getParsedBody();
         $validator = CreateReviewValidatorFactory::create($data);
 
@@ -135,8 +135,6 @@ class ReviewController extends Controller
                 ->json($validator->errors())
                 ->setStatusCode(Response::HTTP_BAD_REQUEST);
         }
-
-        $handler = app(CreateReviewHandler::class);
 
         $review = $handler(new CreateReview(
             $data['content'],
@@ -213,8 +211,11 @@ class ReviewController extends Controller
             ),
         ],
     )]
-    public function update(int $id, ServerRequestInterface $request): Response
-    {
+    public function update(
+        int $id,
+        ServerRequestInterface $request,
+        UpdateReviewContentHandler $handler
+    ): Response {
         $data = $request->getParsedBody();
         $validator = UpdateReviewValidatorFactory::create($data);
 
@@ -225,8 +226,6 @@ class ReviewController extends Controller
         }
 
         try {
-            $handler = app(UpdateReviewContentHandler::class);
-
             $handler(new UpdateReviewContent(
                 $id,
                 $data['content'],
@@ -265,11 +264,9 @@ class ReviewController extends Controller
             ),
         ],
     )]
-    public function remove(int $id): Response
+    public function remove(int $id, RemoveReviewHandler $handler): Response
     {
         try {
-            $handler = app(RemoveReviewHandler::class);
-
             $handler(new RemoveReview($id));
         } catch (EntityNotFoundException) {
             return response(status: Response::HTTP_NOT_FOUND);
